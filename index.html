@@ -1029,7 +1029,7 @@ section[id]{scroll-margin-top:100px}
              data-annual="$144 billed yearly · you save $36">Billed monthly · cancel anytime</p>
           
           <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
-          <button onclick="payForPlan('Starter Plan', 15, 144)" class="btn btn-ghost btn-block">Choose Starter</button>
+          <button onclick="payForPlan(this,'Starter Plan', 15, 144)" class="btn btn-ghost btn-block">Choose Starter</button>
           
           <ul class="plan-features">
             <li>5 CV optimizations / month</li>
@@ -1051,7 +1051,7 @@ section[id]{scroll-margin-top:100px}
              data-annual="$192 billed yearly · you save $48">Billed monthly · cancel anytime</p>
           
           <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
-          <button onclick="payForPlan('Pro Plan', 20, 192)" class="btn btn-grad btn-block">Choose Pro</button>
+          <button onclick="payForPlan(this,'Pro Plan', 20, 192)" class="btn btn-grad btn-block">Choose Pro</button>
           
           <ul class="plan-features">
             <li>10 CV optimizations / month</li>
@@ -1073,7 +1073,7 @@ section[id]{scroll-margin-top:100px}
              data-annual="$288 billed yearly · you save $72">Billed monthly · cancel anytime</p>
           
           <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
-          <button onclick="payForPlan('Growth Plan', 30, 288)" class="btn btn-ghost btn-block">Choose Growth</button>
+          <button onclick="payForPlan(this,'Growth Plan', 30, 288)" class="btn btn-ghost btn-block">Choose Growth</button>
           
           <ul class="plan-features">
             <li>30 CV optimizations / month</li>
@@ -1094,7 +1094,7 @@ section[id]{scroll-margin-top:100px}
              data-annual="$480 billed yearly · you save $120">Billed monthly · cancel anytime</p>
           
           <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
-          <button onclick="payForPlan('Unlimited Plan', 50, 480)" class="btn btn-ghost btn-block">Choose Unlimited</button>
+          <button onclick="payForPlan(this,'Unlimited Plan', 50, 480)" class="btn btn-ghost btn-block">Choose Unlimited</button>
           
           <ul class="plan-features">
             <li>Unlimited CV optimizations</li>
@@ -1156,7 +1156,7 @@ section[id]{scroll-margin-top:100px}
           <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
             <button onclick="payWithStripe(100, 'AI Training Course')" class="btn btn-grad btn-block">
   Pay with Card (Stripe) — $100</button>
-  <button onclick="payWithCrypto(100, 'AI Training Course')" class="crypto-btn">
+  <button onclick="payWithCrypto(this,100, 'AI Training Course')" class="crypto-btn">
               Pay with Crypto — $100</button>
           </div>
         </article>
@@ -1190,7 +1190,7 @@ section[id]{scroll-margin-top:100px}
           
           <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
             <!-- REPLACE WITH YOUR STRIPE LINK -->
-            <button onclick="payWithStripe(50, 'Editing Masterclass')" class="btn btn-ghost btn-block" style="border:1px solid var(--brand); color:var(--brand);">
+            <button onclick="payWithStripe(this,50, 'Editing Masterclass')" class="btn btn-ghost btn-block" style="border:1px solid var(--brand); color:var(--brand);">
   Pay with Card (Stripe) — $50</button>
   <button onclick="payWithCrypto(50, 'Editing Masterclass')" class="crypto-btn">
               Pay with Crypto — $50
@@ -1615,8 +1615,8 @@ segBtns.forEach(btn => btn.addEventListener('click', () => setPeriod(btn.dataset
    5. CRYPTO PAYMENTS
    ============================================================ */
 // Function for Courses ($50 and $100)
-async function payWithCrypto(event, amount, description) {
-  const btn = event.currentTarget;
+/* Function for Courses ($50 and $100) */
+async function payWithCrypto(btn, amount, description) {
   const originalText = btn.innerText;
   btn.innerText = 'Connecting to NOWPayments...';
   btn.disabled = true;
@@ -1629,28 +1629,30 @@ async function payWithCrypto(event, amount, description) {
     });
     const data = await response.json();
     
-    if (data.url) {
-      window.location.href = data.url; 
+    if (data.invoice_url) {
+      window.location.href = data.invoice_url; 
     } else {
       alert('Error creating crypto invoice.');
       btn.innerText = originalText;
       btn.disabled = false;
     }
   } catch (error) {
+    console.error(error);
     alert('Network error. Please try again.');
     btn.innerText = originalText;
     btn.disabled = false;
   }
 }
 
-// Function for Monthly Plans (Checks if Monthly or Annual is selected)
-function payForPlan(event, planName, monthlyPrice, annualPrice) {
+/* Function for Monthly Plans (Checks if Monthly or Annual is selected) */
+function payForPlan(btn, planName, monthlyPrice, annualPrice) {
   const isAnnual = document.getElementById('billingToggle').classList.contains('annual');
   
   const amount = isAnnual ? annualPrice : monthlyPrice;
   const description = isAnnual ? `${planName} (Annual)` : `${planName} (Monthly)`;
 
-  payWithCrypto(event, amount, description);
+  // Pass the button (btn) directly into the crypto function
+  payWithCrypto(btn, amount, description);
 }
 
 /* ============================================================
