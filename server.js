@@ -79,8 +79,8 @@ app.post('/api/create-crypto-invoice', async (req, res) => {
         price_currency: 'usd',
         order_description: description,
         // IMPORTANT: Change 'localhost' to your live domain when you deploy!
-        success_url: 'http://localhost:3000?payment=success',
-        cancel_url: 'http://localhost:3000'
+        success_url: 'https://moha-digitals.onrender.com/?payment=success',
+        cancel_url: 'https://moha-digitals.onrender.com/'
       })
     });
 
