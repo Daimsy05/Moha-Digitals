@@ -109,7 +109,7 @@ app.post('/api/contact', async (req, res) => {
       from: 'onboarding@resend.dev',
       to: 'daims448@gmail.com', // Your email address
       reply_to: email,          // If you click "reply" in Gmail, it goes to the customer
-      subject: `New OptiCV Message from ${name}`,
+      subject: `New Moha Digitals Message from ${name}`,
       html: `<p>You have a new message from your website contact form.</p>
              <p><strong>Name:</strong> ${name}</p>
              <p><strong>Email:</strong> ${email}</p>
