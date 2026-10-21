@@ -4,6 +4,10 @@ const cors = require('cors');
 const OpenAI = require('openai');
 const path = require('path');
 const { Resend } = require('resend');
+const multer = require('multer');
+const pdf = require('pdf-parse');
+const mammoth = require('mammoth');
+
 
 const app = express();
 app.use(cors());
@@ -18,33 +22,68 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
+// Configure multer to store files in memory (RAM)
+const upload = multer({ storage: multer.memoryStorage() });
 
-// ============================================================
-// 1. API Endpoint for CV Optimization
-// ============================================================
-app.post('/api/optimize', async (req, res) => {
+// 1. API Endpoint for CV Optimization (NOW SUPPORTS FILES)
+app.post('/api/optimize', upload.single('cvFile'), async (req, res) => {
   try {
-    const { cvText, jobDescription } = req.body;
+    const { jobDescription, accessCode, cvText: pastedCvText } = req.body;
+    let extractedCvText = pastedCvText || '';
 
-    if (!cvText || !jobDescription) {
+    // If a file was uploaded, extract the text
+    if (req.file) {
+      try {
+        if (req.file.mimetype === 'application/pdf') {
+          const pdfData = await pdf(req.file.buffer);
+          extractedCvText = pdfData.text;
+        } else if (
+          req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+          req.file.originalname.endsWith('.docx')
+        ) {
+          const docxData = await mammoth.extractRawText({ buffer: req.file.buffer });
+          extractedCvText = docxData.value;
+        } else {
+          return res.status(400).json({ error: 'Unsupported file type. Please upload a PDF or DOCX.' });
+        }
+      } catch (parseError) {
+        console.error("File Parsing Error:", parseError);
+        return res.status(400).json({ error: 'Could not read the file. Please ensure it is a valid PDF or DOCX.' });
+      }
+    }
+
+    if (!extractedCvText || !jobDescription) {
       return res.status(400).json({ error: 'Please provide both CV and Job Description.' });
     }
+
+    // --- CREDIT CHECK LOGIC (From previous step) ---
+    const db = getDB();
+    const codeData = db.codes[accessCode?.toUpperCase()];
+
+    if (!codeData) {
+      return res.status(403).json({ error: 'Invalid Access Code. Please purchase a plan.' });
+    }
+
+    if (codeData.credits <= 0) {
+      return res.status(403).json({ error: 'You have used all your credits. Please upgrade.' });
+    }
+
+    db.codes[accessCode.toUpperCase()].credits -= 1;
+    saveDB(db);
+    // -----------------------------------------------
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { 
-          role: "system", 
-          content: "You are an expert ATS CV Optimizer. Rewrite the user's CV to match the job description. Use impactful bullet points, include missing keywords, and format it cleanly. Return ONLY the optimized CV." 
-        },
-        { 
-          role: "user", 
-          content: `JOB DESCRIPTION:\n${jobDescription}\n\nMY CV:\n${cvText}` 
-        }
+        { role: "system", content: "You are an expert ATS CV Optimizer. Rewrite the user's CV to match the job description. Use impactful bullet points, include missing keywords, and format it cleanly. Return ONLY the optimized CV." },
+        { role: "user", content: `JOB DESCRIPTION:\n${jobDescription}\n\nMY CV:\n${extractedCvText}` }
       ]
     });
 
-    res.json({ optimizedCV: completion.choices[0].message.content });
+    res.json({ 
+      optimizedCV: completion.choices[0].message.content,
+      remainingCredits: db.codes[accessCode.toUpperCase()].credits
+    });
 
   } catch (error) {
     console.error('OpenAI Error:', error);
