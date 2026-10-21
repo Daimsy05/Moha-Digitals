@@ -8,6 +8,10 @@ const multer = require('multer');
 const pdf = require('pdf-parse');
 const mammoth = require('mammoth');
 const { Resend } = require('resend');
+const COUPONS = {
+  'WELCOME20': 20, // 20% off
+  
+};
 
 const app = express();
 app.use(cors());
@@ -119,25 +123,32 @@ app.post('/api/claim-plan', (req, res) => {
 // 3. API Endpoint for Crypto Payments
 // ============================================================
 app.post('/api/create-crypto-invoice', async (req, res) => {
+  // 1. Add couponCode here
   const { amount, description, couponCode } = req.body;
 
-  if (!amount || !description) return res.status(400).json({ error: 'Missing amount or description' });
+  if (!amount || !description) {
+    return res.status(400).json({ error: 'Missing amount or description' });
+  }
 
+  // 2. Add the discount math here
   let finalAmount = Number(amount);
-  const COUPONS = { 'MOHA10': 10, 'WELCOME20': 20, 'VIP50': 50 };
   if (couponCode && COUPONS[couponCode.toUpperCase()]) {
-    finalAmount = (finalAmount - (finalAmount * COUPONS[couponCode.toUpperCase()]) / 100).toFixed(2);
+    const discountPercent = COUPONS[couponCode.toUpperCase()];
+    const discountAmount = (finalAmount * discountPercent) / 100;
+    finalAmount = (finalAmount - discountAmount).toFixed(2);
   }
 
   try {
     const response = await fetch('https://api.nowpayments.io/v1/invoice', {
       method: 'POST',
-      headers: { 'x-api-key': process.env.NOWPAYMENTS_API_KEY, 'Content-Type': 'application/json' },
+      headers: {
+        'x-api-key': process.env.NOWPAYMENTS_API_KEY,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
-        price_amount: finalAmount,
+        price_amount: finalAmount, // 3. Change 'amount' to 'finalAmount' here
         price_currency: 'usd',
         order_description: description,
-        // VERY IMPORTANT: We pass the plan name in the URL so the frontend knows which code to generate
         success_url: `https://moha-digitals.onrender.com/?payment=success&plan=${encodeURIComponent(description)}`,
         cancel_url: 'https://moha-digitals.onrender.com/'
       })
