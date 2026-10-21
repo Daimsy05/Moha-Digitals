@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moha Digitals — Optimize your CV. Get more interviews.</title>
+<meta name="description" content="OptiCV scores your CV against real job descriptions, fixes ATS-breaking formatting and rewrites weak bullet points — in under 60 seconds. Plans from $15/month.">
+
+<script>document.documentElement.classList.add('js-ready');</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS & RESET
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+
+:root{
+  --ink:#0b1020; --ink-2:#39415c; --muted:#6b7390;
+  --line:#e8eaf3; --bg:#ffffff; --surface:#f7f8fc;
+  --brand:#4f46e5; --brand-600:#4338ca;
+  --grad:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#06b6d4 100%);
+  --shadow-sm:0 1px 2px rgba(11,16,32,.05), 0 4px 12px -6px rgba(11,16,32,.10);
+  --shadow-md:0 12px 32px -16px rgba(11,16,32,.22);
+  --shadow-lg:0 40px 80px -40px rgba(11,16,32,.38);
+  --r-md:16px; --r-lg:22px; --r-xl:30px;
+  --container:1160px;
+  --font:"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
+  line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+ul{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:6px}
+
+.container{width:min(100% - 40px, var(--container));margin-inline:auto}
+section[id]{scroll-margin-top:100px}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 24px;border-radius:999px;font-weight:700;font-size:.95rem;
+  letter-spacing:-.01em;white-space:nowrap;
+  transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--brand);color:#fff;box-shadow:0 10px 24px -10px rgba(79,70,229,.85)}
+.btn-primary:hover{background:var(--brand-600);transform:translateY(-2px)}
+.btn-grad{background:var(--grad);background-size:180% 180%;color:#fff;box-shadow:0 14px 32px -14px rgba(99,102,241,.85)}
+.btn-grad:hover{transform:translateY(-2px);background-position:100% 0}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{border-color:#c7cbe4;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-light{background:#fff;color:var(--ink);box-shadow:0 14px 30px -14px rgba(0,0,0,.5)}
+.btn-light:hover{transform:translateY(-2px)}
+.btn-sm{padding:10px 18px;font-size:.875rem}
+.btn-block{width:100%}
+.btn-link{font-weight:600;color:var(--ink-2);padding:10px 4px}
+.btn-link:hover{color:var(--brand)}
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+.site-header{
+  position:fixed;inset:0 0 auto 0;z-index:120;padding:16px 0;
+  transition:padding .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.site-header.scrolled{
+  padding:9px 0;background:rgba(255,255,255,.88);
+  -webkit-backdrop-filter:blur(16px) saturate(170%);
+  backdrop-filter:blur(16px) saturate(170%);
+  box-shadow:0 1px 0 var(--line), 0 12px 34px -24px rgba(11,16,32,.5);
+}
+.nav-wrap{display:flex;align-items:center;gap:24px}
+
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:1.12rem;letter-spacing:-.03em}
+.logo-mark{
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  background:var(--grad);box-shadow:0 8px 18px -8px rgba(99,102,241,.9);
+  transition:transform .3s ease;
+}
+.logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06)}
+.logo-mark svg{width:19px;height:19px}
+.logo-text strong{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.nav{display:flex;align-items:center;gap:2px;margin-left:auto}
+.nav a{
+  position:relative;padding:9px 12px;border-radius:10px;
+  font-size:.9rem;font-weight:600;color:var(--ink-2);
+  transition:color .2s ease, background .2s ease;
+}
+.nav a:hover{color:var(--ink);background:rgba(99,102,241,.08)}
+
+.nav-actions{display:flex;align-items:center;gap:6px;margin-left:8px}
+
+.hamburger{
+  display:none;width:44px;height:44px;border-radius:12px;margin-left:auto;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+  border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);
+}
+.hamburger span{display:block;width:20px;height:2px;border-radius:2px;background:var(--ink);
+  transition:transform .3s ease, opacity .25s ease}
+.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.mobile-menu{display:none}
+.mobile-inner{
+  margin:12px 20px 0;padding:16px;
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-md);display:grid;gap:4px;
+}
+.mobile-inner a.m-link{
+  padding:12px 14px;border-radius:12px;font-weight:600;color:var(--ink-2);
+  transition:background .2s, color .2s;
+}
+.mobile-inner a.m-link:hover{background:var(--surface);color:var(--ink)}
+.mobile-cta{display:grid;gap:8px;margin-top:10px;padding-top:14px;border-top:1px solid var(--line)}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{position:relative;padding:154px 0 78px;overflow:hidden}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(680px 460px at 12% -4%, rgba(99,102,241,.17), transparent 68%),
+    radial-gradient(640px 440px at 88% 6%, rgba(6,182,212,.15), transparent 68%),
+    radial-gradient(560px 420px at 52% 104%, rgba(139,92,246,.12), transparent 70%);
+}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(to right, rgba(11,16,32,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11,16,32,.045) 1px, transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(760px 480px at 50% 20%, #000 0%, transparent 78%);
+  mask-image:radial-gradient(760px 480px at 50% 20%, #000 0%, transparent 78%);
+}
+.hero .container{position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:64px;align-items:center}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:.76rem;font-weight:800;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--brand);background:rgba(99,102,241,.10);
+  border:1px solid rgba(99,102,241,.16);
+  padding:7px 15px;border-radius:999px;margin-bottom:22px;
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--brand);
+  box-shadow:0 0 0 4px rgba(99,102,241,.16);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(99,102,241,.18)}50%{box-shadow:0 0 0 7px rgba(99,102,241,.05)}}
+
+.hero h1{font-size:clamp(2.3rem,5.1vw,3.9rem);line-height:1.05;letter-spacing:-.038em;font-weight:800}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.hero-sub{margin-top:22px;max-width:540px;font-size:clamp(1rem,1.4vw,1.12rem);color:var(--muted)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+.hero-trust{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:30px;
+  font-size:.86rem;color:var(--muted);font-weight:500}
+
+.avatars{display:flex;align-items:center}
+.avatars .avatar{
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:.7rem;font-weight:800;color:#fff;
+  border:2.5px solid #fff;margin-left:-10px;
+  box-shadow:0 2px 6px rgba(11,16,32,.16);
+  letter-spacing:-.02em;
+}
+.avatars .avatar:first-child{margin-left:0}
+.stars{color:#f59e0b;letter-spacing:1px;font-size:.85rem}
+
+.hero-visual{position:relative;display:grid;place-items:center;min-height:440px}
+.hero-glow{
+  position:absolute;width:400px;height:400px;border-radius:50%;
+  background:var(--grad);filter:blur(90px);opacity:.22;
+  animation:floaty 9s ease-in-out infinite;
+}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+
+.cv-card{
+  position:relative;width:100%;max-width:400px;
+  background:rgba(255,255,255,.94);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:var(--r-xl);padding:26px;
+  box-shadow:0 44px 80px -40px rgba(11,16,32,.45), 0 0 0 1px rgba(11,16,32,.04);
+  animation:floaty 7s ease-in-out infinite;
+}
+.cv-top{display:flex;align-items:center;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.cv-avatar{
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;
+  font-size:.86rem;font-weight:800;color:#fff;flex-shrink:0;
+  box-shadow:0 8px 18px -8px rgba(99,102,241,.9);
+  letter-spacing:-.02em;
+}
+.cv-name{font-weight:800;font-size:.98rem;letter-spacing:-.02em}
+.cv-role{font-size:.78rem;color:var(--muted)}
+.badge-live{
+  margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+  font-size:.7rem;font-weight:800;color:#059669;background:rgba(16,185,129,.12);
+  padding:5px 10px;border-radius:999px;white-space:nowrap;
+}
+.badge-live::before{content:"";width:6px;height:6px;border-radius:50%;background:#10b981;
+  animation:pulse 2s ease-in-out infinite}
+
+.score-row{display:flex;align-items:center;gap:20px;padding:20px 0 6px}
+.ring{
+  --p:92;width:96px;height:96px;border-radius:50%;flex-shrink:0;position:relative;
+  display:grid;place-items:center;
+  background:conic-gradient(from -90deg, #6366f1 0%, #8b5cf6 calc(var(--p)*.55%), #06b6d4 calc(var(--p)*1%), #eceefa calc(var(--p)*1%));
+}
+.ring::before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}
+.ring b{position:relative;font-size:1.42rem;font-weight:800;letter-spacing:-.04em}
+.score-label{font-size:.74rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.score-value{font-size:1.15rem;font-weight:800;letter-spacing:-.03em;margin-top:2px}
+.score-delta{font-size:.8rem;font-weight:700;color:#059669;margin-top:2px}
+
+.metrics{display:grid;gap:13px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.metric-top{display:flex;justify-content:space-between;font-size:.79rem;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.metric-top b{color:var(--ink)}
+.track{height:7px;border-radius:99px;background:#eef0f9;overflow:hidden}
+.track i{
+  display:block;height:100%;width:var(--w);border-radius:99px;background:var(--grad);
+  animation:grow 1.3s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes grow{from{width:0}to{width:var(--w)}}
+
+.float-card{
+  position:absolute;background:#fff;border-radius:15px;padding:11px 15px;
+  box-shadow:0 20px 40px -20px rgba(11,16,32,.4), 0 0 0 1px rgba(11,16,32,.04);
+  display:flex;align-items:center;gap:10px;font-size:.79rem;font-weight:700;
+  animation:floaty 5.5s ease-in-out infinite;
+}
+.float-card .fi{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.float-1{top:14px;right:-6px;animation-delay:-1.6s}
+.float-1 .fi{background:rgba(16,185,129,.14);color:#059669}
+.float-2{bottom:36px;left:-14px;animation-delay:-3.2s}
+.float-2 .fi{background:rgba(99,102,241,.14);color:var(--brand)}
+.float-card small{display:block;font-size:.69rem;font-weight:600;color:var(--muted);margin-top:1px}
+
+/* ============================================================
+   LOGOS
+   ============================================================ */
+.logos{padding:8px 0 54px}
+.logos p{text-align:center;font-size:.76rem;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:#9aa1ba;margin-bottom:24px}
+.logos-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px 46px}
+.logos-row span{font-size:1.12rem;font-weight:800;letter-spacing:-.03em;color:#c2c7d8;
+  transition:color .25s ease, transform .25s ease}
+.logos-row span:hover{color:var(--ink-2);transform:translateY(-2px)}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section{padding:98px 0}
+.section-tint{background:var(--surface);border-block:1px solid var(--line)}
+.section-head{max-width:660px;margin:0 auto 54px;text-align:center}
+.section-head h2{font-size:clamp(1.75rem,3.4vw,2.6rem);line-height:1.14;letter-spacing:-.03em;font-weight:800}
+.section-head p{margin-top:15px;color:var(--muted);font-size:1.03rem}
+
+/* ============================================================
+   FEATURES
+   ============================================================ */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature{
+  position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:28px 26px;overflow:hidden;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.feature::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--grad);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.7,.3,1);
+}
+.feature:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:#dcdfef}
+.feature:hover::before{transform:scaleX(1)}
+.feature-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(99,102,241,.13),rgba(6,182,212,.13));
+  color:var(--brand);margin-bottom:18px;transition:transform .3s ease;
+}
+.feature:hover .feature-icon{transform:scale(1.08) rotate(-5deg)}
+.feature-icon svg{width:22px;height:22px}
+.feature h3{font-size:1.03rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.feature p{font-size:.92rem;color:var(--muted);line-height:1.65}
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;position:relative}
+.steps::before{
+  content:"";position:absolute;top:38px;left:12%;right:12%;height:2px;
+  background:repeating-linear-gradient(to right,#d6daea 0 8px,transparent 8px 18px);z-index:0;
+}
+.step{position:relative;z-index:1;text-align:center;padding:0 12px}
+.step-num{
+  width:76px;height:76px;margin:0 auto 20px;border-radius:24px;
+  display:grid;place-items:center;font-size:1.5rem;font-weight:800;
+  background:#fff;border:1px solid var(--line);color:var(--brand);box-shadow:var(--shadow-sm);
+  transition:transform .3s ease, box-shadow .3s ease, background .3s ease, color .3s ease;
+}
+.step:hover .step-num{
+  transform:translateY(-5px) scale(1.04);background:var(--grad);color:#fff;
+  border-color:transparent;box-shadow:0 20px 40px -18px rgba(99,102,241,.85);
+}
+.step h3{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.step p{font-size:.92rem;color:var(--muted);max-width:290px;margin-inline:auto}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats{
+  position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#12162e 0%,#221d52 48%,#2c1a5e 100%);
+  padding:64px 0;
+}
+.stats::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(480px 260px at 12% 10%, rgba(99,102,241,.35), transparent 70%),
+    radial-gradient(480px 260px at 88% 90%, rgba(6,182,212,.28), transparent 70%);
+}
+.stats-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:34px;text-align:center}
+.stat b{
+  display:block;font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.04em;
+  line-height:1.1;background:linear-gradient(135deg,#fff,#c7d2fe);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat span{display:block;margin-top:8px;font-size:.85rem;font-weight:600;color:rgba(255,255,255,.62)}
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.billing-toggle{display:flex;justify-content:center;margin-bottom:46px}
+.seg{
+  position:relative;display:inline-grid;grid-template-columns:1fr 1fr;
+  padding:5px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);
+}
+.seg-pill{
+  position:absolute;top:5px;left:5px;height:calc(100% - 10px);width:calc(50% - 5px);
+  border-radius:999px;background:var(--grad);
+  box-shadow:0 8px 20px -10px rgba(99,102,241,.9);
+  transition:transform .38s cubic-bezier(.2,.7,.3,1);
+}
+.seg.annual .seg-pill{transform:translateX(100%)}
+.seg-btn{
+  position:relative;z-index:1;padding:11px 24px;border-radius:999px;
+  font-size:.9rem;font-weight:700;color:var(--muted);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:color .3s ease;white-space:nowrap;
+}
+.seg-btn.is-active{color:#fff}
+.seg-btn em{
+  font-style:normal;font-size:.68rem;font-weight:800;letter-spacing:.04em;
+  background:rgba(16,185,129,.16);color:#059669;padding:3px 8px;border-radius:99px;
+  transition:background .3s,color .3s;
+}
+.seg-btn.is-active em{background:rgba(255,255,255,.22);color:#fff}
+
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:start}
+.plan{
+  position:relative;display:flex;flex-direction:column;gap:16px;
+  background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 24px;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.plan:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:#d7dbee}
+.plan-head h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
+.plan-head p{font-size:.83rem;color:var(--muted);margin-top:3px}
+.plan-price{display:flex;align-items:flex-end;gap:2px;line-height:1}
+.plan-price .cur{font-size:1.15rem;font-weight:700;color:var(--ink-2);transform:translateY(-6px)}
+.plan-price .amount{font-size:2.9rem;font-weight:800;letter-spacing:-.045em}
+.plan-price .per{font-size:.86rem;font-weight:600;color:var(--muted);margin-left:4px;transform:translateY(-6px)}
+.billed{font-size:.78rem;color:var(--muted);min-height:2.4em;line-height:1.4}
+.plan .btn{margin-top:2px}
+.plan-features{display:grid;gap:11px;margin-top:4px;padding-top:18px;border-top:1px solid var(--line)}
+.plan-features li{position:relative;padding-left:28px;font-size:.9rem;color:var(--ink-2);line-height:1.5}
+.plan-features li::before{
+  content:"✓";position:absolute;left:0;top:.28em;width:18px;height:18px;border-radius:50%;
+  display:grid;place-items:center;font-size:10px;font-weight:800;color:#fff;background:var(--grad);
+}
+
+.plan-featured{
+  color:#fff;border:none;
+  background:linear-gradient(165deg,#151a35 0%,#241f52 52%,#321d63 100%);
+  box-shadow:0 36px 70px -34px rgba(79,70,229,.85);
+}
+.plan-featured:hover{transform:translateY(-9px);box-shadow:0 46px 80px -34px rgba(79,70,229,.95)}
+.plan-featured .plan-head p{color:rgba(255,255,255,.6)}
+.plan-featured .plan-price .cur{color:rgba(255,255,255,.75)}
+.plan-featured .plan-price .amount{color:#fff}
+.plan-featured .plan-price .per{color:rgba(255,255,255,.6)}
+.plan-featured .billed{color:rgba(255,255,255,.6)}
+.plan-featured .plan-features{border-top-color:rgba(255,255,255,.14)}
+.plan-featured .plan-features li{color:rgba(255,255,255,.82)}
+.plan-featured .plan-features li::before{background:linear-gradient(135deg,#22d3ee,#818cf8)}
+
+.plan-badge{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--grad);color:#fff;font-size:.68rem;font-weight:800;
+  letter-spacing:.10em;text-transform:uppercase;padding:6px 15px;border-radius:999px;
+  white-space:nowrap;box-shadow:0 10px 22px -10px rgba(99,102,241,1);
+}
+.pricing-note{
+  margin-top:36px;text-align:center;font-size:.86rem;color:var(--muted);
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;
+}
+.pricing-note span{display:inline-flex;align-items:center;gap:7px}
+.pricing-note span::before{content:"✓";color:#10b981;font-weight:800}
+
+/* ============================================================
+   SERVICES (Courses)
+   ============================================================ */
+.services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.service-card{
+  position:relative;display:flex;flex-direction:column;gap:16px;
+  background:#fff;border:1px solid var(--line);border-radius:28px;
+  padding:34px 30px;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.service-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:#d7dbee}
+.service-icon{
+  width:54px;height:54px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(6,182,212,.14));
+  color:var(--brand);flex-shrink:0;
+}
+.service-icon svg{width:26px;height:26px}
+.service-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.service-head h3{font-size:1.28rem;font-weight:800;letter-spacing:-.025em;line-height:1.25}
+.service-price{
+  flex-shrink:0;display:flex;align-items:flex-start;gap:1px;line-height:1;
+  padding:8px 14px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--line);
+}
+.service-price .cur{font-size:.95rem;font-weight:700;color:var(--ink-2);transform:translateY(2px)}
+.service-price .amount{font-size:1.5rem;font-weight:800;letter-spacing:-.03em}
+.service-meta{display:flex;flex-wrap:wrap;gap:8px}
+.service-meta span{
+  font-size:.72rem;font-weight:700;letter-spacing:.02em;
+  color:var(--ink-2);background:var(--surface);
+  padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+}
+.service-sub{font-size:.94rem;color:var(--muted);line-height:1.62}
+.service-features{
+  display:grid;gap:12px;padding:18px 0;margin:0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.service-features li{
+  position:relative;padding-left:30px;font-size:.92rem;color:var(--ink-2);line-height:1.5;
+}
+.service-features li::before{
+  content:"✓";position:absolute;left:0;top:.24em;
+  width:20px;height:20px;border-radius:50%;
+  display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;
+  background:var(--grad);
+}
+.service-card .btn{margin-top:2px}
+.service-badge{
+  position:absolute;top:-12px;left:24px;
+  background:var(--grad);color:#fff;
+  font-size:.66rem;font-weight:800;letter-spacing:.10em;text-transform:uppercase;
+  padding:6px 12px;border-radius:999px;
+  box-shadow:0 10px 22px -10px rgba(99,102,241,1);
+}
+
+/* Crypto Button */
+.crypto-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 24px;border-radius:999px;background:#f7931a;color:#fff;
+  font-weight:700;font-size:.95rem;margin-top:10px;transition:0.2s;
+  box-shadow:0 10px 24px -10px rgba(247,147,26,0.6);
+}
+.crypto-btn:hover{background:#e08115;transform:translateY(-2px)}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.quote{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:28px 26px;display:flex;flex-direction:column;gap:18px;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.quote:hover{transform:translateY(-5px);box-shadow:var(--shadow-md)}
+.quote .stars{font-size:.9rem}
+.quote p{font-size:.95rem;color:var(--ink-2);line-height:1.68;flex:1}
+.quote-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.quote-avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:grid;place-items:center;font-size:.78rem;font-weight:800;color:#fff;
+  flex-shrink:0;letter-spacing:-.02em;
+}
+.quote-author b{display:block;font-size:.9rem;font-weight:800;letter-spacing:-.01em}
+.quote-author small{display:block;font-size:.78rem;color:var(--muted)}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq-list{max-width:800px;margin-inline:auto;display:grid;gap:12px}
+.faq-item{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;
+  transition:border-color .3s ease, box-shadow .3s ease;
+}
+.faq-item.open{border-color:#cfd4ec;box-shadow:var(--shadow-md)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:20px 24px;text-align:left;font-size:.98rem;font-weight:700;letter-spacing:-.01em;
+  transition:color .2s ease;
+}
+.faq-q:hover{color:var(--brand)}
+.faq-icon{
+  position:relative;width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--surface);display:grid;place-items:center;
+  transition:background .3s ease, transform .3s ease;
+}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--ink-2);border-radius:2px;
+  transition:transform .32s cubic-bezier(.2,.7,.3,1), background .3s;
+}
+.faq-icon::before{width:11px;height:2px}
+.faq-icon::after{width:2px;height:11px}
+.faq-item.open .faq-icon{background:var(--grad);transform:rotate(90deg)}
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after{background:#fff}
+.faq-item.open .faq-icon::after{transform:scaleY(0)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .36s cubic-bezier(.2,.7,.3,1)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a > div{overflow:hidden}
+.faq-a p{padding:0 24px 22px;font-size:.93rem;color:var(--muted);line-height:1.72}
+
+/* ============================================================
+   CV OPTIMIZATION FORM
+   ============================================================ */
+.form-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);
+  padding:32px;box-shadow:var(--shadow-md);max-width:800px;margin:0 auto;
+}
+.field{display:grid;gap:7px;margin-bottom:16px}
+.field label{font-size:.8rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.field input,.field select,.field textarea{
+  width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);
+  background:var(--surface);font-family:inherit;font-size:.93rem;color:var(--ink);
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.field textarea{resize:vertical;min-height:120px}
+.field input:focus,.field textarea:focus{
+  outline:none;background:#fff;border-color:var(--brand);
+  box-shadow:0 0 0 4px rgba(99,102,241,.14);
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:start}
+.contact-copy h2{font-size:clamp(1.7rem,3.2vw,2.35rem);line-height:1.15;letter-spacing:-.03em;font-weight:800}
+.contact-copy > p{margin-top:14px;color:var(--muted);max-width:440px}
+
+.contact-list{display:grid;gap:14px;margin-top:32px}
+.contact-item{
+  display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:#fff;
+  border:1px solid var(--line);border-radius:var(--r-md);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.contact-item:hover{transform:translateX(4px);box-shadow:var(--shadow-sm);border-color:#d7dbee}
+.contact-item .ci{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(99,102,241,.13),rgba(6,182,212,.13));
+  color:var(--brand);
+}
+.contact-item .ci svg{width:18px;height:18px}
+.contact-item b{display:block;font-size:.79rem;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted)}
+.contact-item a,.contact-item span{font-size:.94rem;font-weight:600;color:var(--ink);transition:color .2s}
+.contact-item a:hover{color:var(--brand)}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+#thankYouModal { display:none; position:fixed; inset:0; z-index:9999; background:rgba(11,16,32,0.8); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
+.modal-content { background:#fff; border-radius:24px; padding:40px; max-width:450px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.2); }
+
+/* ============================================================
+   CTA BAND
+   ============================================================ */
+.cta-band{padding:0 0 98px}
+.cta-inner{
+  position:relative;overflow:hidden;text-align:center;
+  padding:70px 34px;border-radius:36px;
+  background:linear-gradient(125deg,#141935 0%,#241f52 45%,#33206b 100%);
+  box-shadow:0 50px 90px -50px rgba(79,70,229,.95);
+}
+.cta-inner::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(420px 260px at 15% 0%, rgba(99,102,241,.45), transparent 70%),
+    radial-gradient(420px 260px at 85% 100%, rgba(6,182,212,.38), transparent 70%);
+}
+.cta-inner > *{position:relative;z-index:1}
+.cta-inner h2{font-size:clamp(1.75rem,3.6vw,2.7rem);line-height:1.12;letter-spacing:-.035em;font-weight:800;color:#fff}
+.cta-inner p{margin-top:14px;color:rgba(255,255,255,.72);font-size:1.02rem;max-width:520px;margin-inline:auto}
+.cta-inner .btn{margin-top:30px}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{background:#0b0f1f;color:rgba(255,255,255,.68);padding:72px 0 0}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.25fr;gap:44px;padding-bottom:52px}
+.footer-brand .logo{color:#fff;margin-bottom:16px}
+.footer-brand p{font-size:.89rem;line-height:1.72;max-width:280px;color:rgba(255,255,255,.55)}
+
+.socials{display:flex;gap:9px;margin-top:22px}
+.socials a{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);
+  transition:background .25s ease, color .25s ease, transform .25s ease;
+}
+.socials a:hover{background:var(--grad);color:#fff;transform:translateY(-3px)}
+.socials svg{width:17px;height:17px}
+
+.footer-col h4{font-size:.76rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:#fff;margin-bottom:16px}
+.footer-col ul{display:grid;gap:11px}
+.footer-col a{font-size:.89rem;color:rgba(255,255,255,.58);transition:color .2s ease, padding-left .2s ease}
+.footer-col a:hover{color:#fff;padding-left:4px}
+
+.footer-contact li{display:flex;gap:10px;font-size:.87rem;line-height:1.6;color:rgba(255,255,255,.58)}
+.footer-contact svg{width:15px;height:15px;flex-shrink:0;margin-top:4px;color:#818cf8}
+.footer-contact a:hover{color:#fff}
+
+.newsletter{display:flex;gap:8px;margin-top:18px}
+.newsletter input{
+  flex:1;min-width:0;padding:11px 14px;border-radius:11px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-family:inherit;font-size:.86rem;transition:border-color .2s, background .2s;
+}
+.newsletter input::placeholder{color:rgba(255,255,255,.36)}
+.newsletter input:focus{outline:none;border-color:rgba(129,140,248,.75);background:rgba(255,255,255,.1)}
+.newsletter button{
+  padding:11px 18px;border-radius:11px;font-size:.84rem;font-weight:800;
+  background:var(--grad);color:#fff;transition:transform .2s ease, box-shadow .25s ease;
+}
+.newsletter button:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(99,102,241,1)}
+.news-msg{font-size:.78rem;color:#34d399;margin-top:10px;min-height:1.1em;font-weight:700}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.09);padding:24px 0;
+  display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  font-size:.82rem;color:rgba(255,255,255,.45);
+}
+.footer-legal{display:flex;flex-wrap:wrap;gap:20px}
+.footer-legal a:hover{color:#fff}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+[data-reveal]{opacity:1;transform:none}
+.js-ready [data-reveal]{
+  opacity:0;transform:translateY(24px);
+  transition:opacity .72s cubic-bezier(.2,.7,.3,1), transform .72s cubic-bezier(.2,.7,.3,1);
+  transition-delay:var(--d,0ms);
+}
+.js-ready [data-reveal].in{opacity:1;transform:none}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1080px){
+  .nav{gap:0}
+  .nav a{padding:9px 10px;font-size:.875rem}
+}
+
+@media (max-width:960px){
+  .nav{display:none}
+  .nav-actions{display:none}
+  .hamburger{display:flex}
+
+  .mobile-menu{
+    display:block;max-height:0;overflow:hidden;
+    transition:max-height .42s cubic-bezier(.2,.7,.3,1);
+  }
+  .mobile-menu.open{max-height:800px}
+
+  .hero-grid{grid-template-columns:1fr;gap:58px}
+  .hero{padding-top:132px}
+  .hero-visual{min-height:auto}
+  .float-1{right:0}
+  .float-2{left:0}
+
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .plans{grid-template-columns:repeat(2,1fr)}
+  .quotes{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr;gap:44px}
+  .footer-grid{grid-template-columns:1fr 1fr 1fr;gap:38px}
+  .footer-brand{grid-column:1 / -1}
+  .footer-brand p{max-width:420px}
+}
+
+@media (max-width:820px){
+  .section{padding:76px 0}
+  .steps{grid-template-columns:1fr;gap:38px}
+  .steps::before{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:34px 20px}
+  .cta-inner{padding:56px 24px;border-radius:28px}
+  .services-grid{grid-template-columns:1fr}
+}
+
+@media (max-width:640px){
+  .container{width:calc(100% - 32px)}
+  .hero{padding-top:120px;padding-bottom:60px}
+  .hero-cta .btn{width:100%}
+  .features-grid{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr;gap:18px}
+  .plan-featured{order:-1}
+  .form-card{padding:24px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-brand{grid-column:1 / -1}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .seg-btn{padding:11px 18px;font-size:.85rem}
+  .cv-card{padding:22px}
+  .ring{width:82px;height:82px}
+  .score-value{font-size:1rem}
+  .float-card{display:none}
+}
+
+@media (max-width:480px){
+  .service-head{flex-direction:column;align-items:flex-start}
+  .service-card{padding:28px 22px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important;
+  }
+  [data-reveal]{opacity:1 !important;transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" id="header">
+  <div class="container nav-wrap">
+
+    <a href="#top" class="logo" aria-label="OptiCV home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 3.5h8L19 8v12.5H6V3.5Z" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M9 12.6l2.1 2.1L15 10.8" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="logo-text">Moha<strong>Digitals</strong></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#services">Services</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="#optimize" class="btn btn-link">Try it Now</a>
+      <a href="#pricing" class="btn btn-primary btn-sm">Get started</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Open menu"
+            aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-inner">
+      <a class="m-link" href="#features">Features</a>
+      <a class="m-link" href="#how">How it works</a>
+      <a class="m-link" href="#pricing">Pricing</a>
+      <a class="m-link" href="#services">Services</a>
+      <a class="m-link" href="#faq">FAQ</a>
+      <a class="m-link" href="#contact">Contact</a>
+      <div class="mobile-cta">
+        <a href="#optimize" class="btn btn-ghost btn-block">Try it Now</a>
+        <a href="#pricing" class="btn btn-grad btn-block">Get started</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-grid">
+
+        <div class="hero-copy">
+          <span class="eyebrow" data-reveal>
+            <span class="dot"></span> AI-powered CV optimization
+          </span>
+
+          <h1 data-reveal style="--d:60ms">
+            Optimize your CV.<br>
+            Get more <span class="grad-text">interviews.</span>
+          </h1>
+
+          <p class="hero-sub" data-reveal style="--d:120ms">
+            OptiCV scores your CV against real job descriptions, fixes the formatting
+            that breaks ATS parsers, and rewrites weak bullet points into results
+            recruiters actually stop for — in under 60 seconds.
+          </p>
+
+          <div class="hero-cta" data-reveal style="--d:180ms">
+            <a href="#optimize" class="btn btn-grad">Try it Now — Free</a>
+            <a href="#how" class="btn btn-ghost">
+              See how it works
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero-trust" data-reveal style="--d:240ms">
+            <div class="avatars" aria-hidden="true">
+              <span class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">AK</span>
+              <span class="avatar" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">JM</span>
+              <span class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">RS</span>
+              <span class="avatar" style="background:linear-gradient(135deg,#10b981,#06b6d4)">LT</span>
+            </div>
+            <div>
+              <span class="stars" aria-hidden="true">★★★★★</span>
+              <span> 4.9/5 from 2,400+ job seekers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" data-reveal style="--d:200ms">
+          <div class="hero-glow" aria-hidden="true"></div>
+
+          <div class="cv-card" role="img"
+               aria-label="Sample CV optimization report showing an ATS score of 92 out of 100">
+            <div class="cv-top">
+              <span class="cv-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">AK</span>
+              <div>
+                <div class="cv-name">Amara Khan</div>
+                <div class="cv-role">Product Designer</div>
+              </div>
+              <span class="badge-live">Optimized</span>
+            </div>
+
+            <div class="score-row">
+              <div class="ring" style="--p:92"><b>92</b></div>
+              <div class="score-meta">
+                <div class="score-label">ATS Score</div>
+                <div class="score-value">Top 8% of applicants</div>
+                <div class="score-delta">▲ 27 points this week</div>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-top"><span>Keyword match</span><b>94%</b></div>
+                <div class="track"><i style="--w:94%"></i></div>
+              </div>
+              <div class="metric">
+                <div class="metric-top"><span>Impact statements</span><b>88%</b></div>
+                <div class="track"><i style="--w:88%"></i></div>
+              </div>
+              <div class="metric">
+                <div class="metric-top"><span>Format &amp; parsing</span><b>100%</b></div>
+                <div class="track"><i style="--w:100%"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="float-card float-1">
+            <span class="fi">✓</span>
+            <div>ATS check passed<small>Format is machine-readable</small></div>
+          </div>
+          <div class="float-card float-2">
+            <span class="fi">✦</span>
+            <div>3 interviews booked<small>Since your last update</small></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS -->
+  <section class="logos">
+    <div class="container">
+      <p data-reveal>Our users got hired at</p>
+      <div class="logos-row" data-reveal style="--d:80ms">
+        <span>Northwind</span><span>Lumen</span><span>Vertex</span>
+        <span>Kite&amp;Co</span><span>Orbital</span><span>Foundry</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CV OPTIMIZATION TOOL -->
+  <section class="section section-tint" id="optimize">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>Try it now</span>
+        <h2 data-reveal style="--d:60ms">Optimize your CV instantly</h2>
+        <p data-reveal style="--d:120ms">Paste your current CV and the job description you are applying for. Our AI will rewrite it to pass the ATS.</p>
+      </div>
+      
+      <div class="form-card" data-reveal>
+        <div class="field">
+          <label>Paste the Job Description</label>
+          <textarea id="jobInput" rows="4" placeholder="Paste the requirements, skills, and duties here..."></textarea>
+        </div>
+        <div class="field">
+          <label>Paste your Current CV</label>
+          <textarea id="cvInput" rows="6" placeholder="Paste your current CV text here..."></textarea>
+        </div>
+        <button id="optimizeBtn" class="btn btn-grad btn-block" style="margin-top:10px;">Optimize My CV Now</button>
+        <div id="loadingText" style="display:none; text-align:center; margin-top:15px; font-weight:700; color:var(--brand);">Optimizing... Please wait up to 20 seconds.</div>
+        
+        <div id="resultBox" style="display:none; margin-top:24px; padding:24px; background:var(--surface); border-radius:16px; border:1px solid var(--line);">
+          <h4 style="margin-bottom:12px; font-weight:800; color:var(--ink);">Your Optimized CV:</h4>
+          <div id="resultOutput" style="white-space:pre-wrap; font-size:0.95rem; line-height:1.7; color:var(--ink-2);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>Features</span>
+        <h2 data-reveal style="--d:60ms">Everything between your CV and the offer</h2>
+        <p data-reveal style="--d:120ms">
+          One workspace to score, rewrite, tailor and track every version of your CV.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature" data-reveal>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9 2.9-6Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Instant ATS score</h3>
+          <p>Get a 0–100 compatibility score with a line-by-line breakdown of what is
+             blocking you from reaching a human recruiter.</p>
+        </article>
+
+        <article class="feature" data-reveal style="--d:60ms">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Keyword matching</h3>
+          <p>Paste any job description and we surface the exact skills, tools and phrases
+             the employer's filters are scanning for.</p>
+        </article>
+
+        <article class="feature" data-reveal style="--d:120ms">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 20l4.5-1.2 10-10a2.4 2.4 0 0 0-3.4-3.4l-10 10L4 20Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M14 6.5l3.5 3.5" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+          </div>
+          <h3>AI bullet rewriting</h3>
+          <p>Turn "responsible for social media" into measurable, impact-driven achievements
+             that survive a six-second scan.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section section-tint" id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>Pricing</span>
+        <h2 data-reveal style="--d:60ms">Simple monthly plans, cancel anytime</h2>
+        <p data-reveal style="--d:120ms">
+          Pick how many CVs you need optimized each month. Upgrade, downgrade or
+          cancel whenever.
+        </p>
+      </div>
+
+      <div class="billing-toggle" data-reveal>
+        <div class="seg" id="billingToggle" role="group" aria-label="Billing period">
+          <span class="seg-pill" aria-hidden="true"></span>
+          <button class="seg-btn is-active" data-period="monthly" aria-pressed="true">Monthly</button>
+          <button class="seg-btn" data-period="annual" aria-pressed="false">
+            Annual <em>Save 20%</em>
+          </button>
+        </div>
+      </div>
+
+      <div class="plans">
+        <!-- STARTER PLAN -->
+        <article class="plan" data-reveal>
+          <div class="plan-head"><h3>Starter</h3><p>For a focused job hunt</p></div>
+          <div class="plan-price">
+            <span class="cur">$</span><span class="amount" data-monthly="15" data-annual="12">15</span><span class="per">/mo</span>
+          </div>
+          <p class="billed" data-monthly="Billed monthly · cancel anytime"
+             data-annual="$144 billed yearly · you save $36">Billed monthly · cancel anytime</p>
+          
+          <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
+          <button onclick="payForPlan('Starter Plan', 15, 144)" class="btn btn-ghost btn-block">Choose Starter</button>
+          
+          <ul class="plan-features">
+            <li>5 CV optimizations / month</li>
+            <li>ATS score &amp; full report</li>
+            <li>Keyword match for 1 job</li>
+            <li>PDF &amp; DOCX export</li>
+            <li>Email support</li>
+          </ul>
+        </article>
+
+        <!-- PRO PLAN -->
+        <article class="plan plan-featured" data-reveal style="--d:70ms">
+          <span class="plan-badge">Most popular</span>
+          <div class="plan-head"><h3>Pro</h3><p>For active applicants</p></div>
+          <div class="plan-price">
+            <span class="cur">$</span><span class="amount" data-monthly="20" data-annual="16">20</span><span class="per">/mo</span>
+          </div>
+          <p class="billed" data-monthly="Billed monthly · cancel anytime"
+             data-annual="$192 billed yearly · you save $48">Billed monthly · cancel anytime</p>
+          
+          <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
+          <button onclick="payForPlan('Pro Plan', 20, 192)" class="btn btn-grad btn-block">Choose Pro</button>
+          
+          <ul class="plan-features">
+            <li>10 CV optimizations / month</li>
+            <li>Everything in Starter</li>
+            <li>AI bullet rewriting</li>
+            <li>Cover letter generator</li>
+            <li>Unlimited job matches</li>
+            <li>Priority email support</li>
+          </ul>
+        </article>
+
+        <!-- GROWTH PLAN -->
+        <article class="plan" data-reveal style="--d:140ms">
+          <div class="plan-head"><h3>Growth</h3><p>For a full career push</p></div>
+          <div class="plan-price">
+            <span class="cur">$</span><span class="amount" data-monthly="30" data-annual="24">30</span><span class="per">/mo</span>
+          </div>
+          <p class="billed" data-monthly="Billed monthly · cancel anytime"
+             data-annual="$288 billed yearly · you save $72">Billed monthly · cancel anytime</p>
+          
+          <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
+          <button onclick="payForPlan('Growth Plan', 30, 288)" class="btn btn-ghost btn-block">Choose Growth</button>
+          
+          <ul class="plan-features">
+            <li>30 CV optimizations / month</li>
+            <li>Everything in Pro</li>
+            <li>LinkedIn profile review</li>
+            <li>Interview question prep</li>
+            <li>Live chat support</li>
+          </ul>
+        </article>
+
+        <!-- UNLIMITED PLAN -->
+        <article class="plan" data-reveal style="--d:210ms">
+          <div class="plan-head"><h3>Unlimited</h3><p>For coaches &amp; power users</p></div>
+          <div class="plan-price">
+            <span class="cur">$</span><span class="amount" data-monthly="50" data-annual="40">50</span><span class="per">/mo</span>
+          </div>
+          <p class="billed" data-monthly="Billed monthly · cancel anytime"
+             data-annual="$480 billed yearly · you save $120">Billed monthly · cancel anytime</p>
+          
+          <!-- REPLACE HREF WITH YOUR STRIPE MONTHLY/ANNUAL LINKS -->
+          <button onclick="payForPlan('Unlimited Plan', 50, 480)" class="btn btn-ghost btn-block">Choose Unlimited</button>
+          
+          <ul class="plan-features">
+            <li>Unlimited CV optimizations</li>
+            <li>Everything in Growth</li>
+            <li>1:1 human review, monthly</li>
+            <li>Career coaching call</li>
+            <li>Dedicated account manager</li>
+            <li>Early access to new features</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>More services</span>
+        <h2 data-reveal style="--d:60ms">Master new skills, earn more</h2>
+        <p data-reveal style="--d:120ms">
+          Beyond CV optimization — hands-on training programs with one-time pricing
+          and lifetime access to the course materials.
+        </p>
+      </div>
+
+      <div class="services-grid">
+
+        <article class="service-card" data-reveal>
+          <span class="service-badge">Bestseller</span>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M22 9.5L12 4.5 2 9.5l10 5 10-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M6 11.8v4.7c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.7" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M22 9.5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="service-head">
+            <h3>Complete Guide to AI Training</h3>
+            <div class="service-price">
+              <span class="cur">$</span><span class="amount">100</span>
+            </div>
+          </div>
+          <div class="service-meta">
+            <span>📅 3-week program</span>
+            <span>One-time payment</span>
+          </div>
+          <p class="service-sub">
+            A practical 3-week training session that takes you from zero to
+            earning on real AI training platforms — no prior experience needed.
+          </p>
+          <ul class="service-features">
+            <li>Introduction to AI training</li>
+            <li>Tasking on AI training platforms</li>
+            <li>Popular AI training sites</li>
+            <li>Creating AI training accounts</li>
+          </ul>
+          
+          <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
+            <button onclick="payWithStripe(100, 'AI Training Course')" class="btn btn-grad btn-block">
+  Pay with Card (Stripe) — $100</button>
+  <button onclick="payWithCrypto(100, 'AI Training Course')" class="crypto-btn">
+              Pay with Crypto — $100</button>
+          </div>
+        </article>
+
+        <article class="service-card" data-reveal style="--d:80ms">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 20l4.5-1.2 10-10a2.4 2.4 0 0 0-3.4-3.4l-10 10L4 20Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M14 6.5l3.5 3.5" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+          </div>
+          <div class="service-head">
+            <h3>Editing Masterclass</h3>
+            <div class="service-price">
+              <span class="cur">$</span><span class="amount">50</span>
+            </div>
+          </div>
+          <div class="service-meta">
+            <span>📚 Self-paced</span>
+            <span>One-time payment</span>
+          </div>
+          <p class="service-sub">
+            A focused editing course covering the three most in-demand editing
+            skills — PDFs, PSDs and images — taught step by step.
+          </p>
+          <ul class="service-features">
+            <li>PDF editing</li>
+            <li>PSD editing</li>
+            <li>Image editing</li>
+          </ul>
+          
+          <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
+            <!-- REPLACE WITH YOUR STRIPE LINK -->
+            <button onclick="payWithStripe(50, 'Editing Masterclass')" class="btn btn-ghost btn-block" style="border:1px solid var(--brand); color:var(--brand);">
+  Pay with Card (Stripe) — $50</button>
+  <button onclick="payWithCrypto(50, 'Editing Masterclass')" class="crypto-btn">
+              Pay with Crypto — $50
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section section-tint" id="stories">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>Success stories</span>
+        <h2 data-reveal style="--d:60ms">Real people, real offers</h2>
+        <p data-reveal style="--d:120ms">Demo testimonials — swap with your own once you have them.</p>
+      </div>
+
+      <div class="quotes">
+        <article class="quote" data-reveal>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p>"I applied to 40 roles with zero callbacks. After OptiCV fixed my formatting
+             and keyword gaps, I got three interviews in ten days — and an offer."</p>
+          <div class="quote-author">
+            <span class="quote-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">JM</span>
+            <div><b>Jordan Mensah</b><small>Data Analyst · hired at Vertex</small></div>
+          </div>
+        </article>
+
+        <article class="quote" data-reveal style="--d:80ms">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p>"The bullet rewriter is worth the subscription alone. It turned my vague
+             responsibilities into numbers a hiring manager actually cares about."</p>
+          <div class="quote-author">
+            <span class="quote-avatar" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">RS</span>
+            <div><b>Riya Sharma</b><small>Marketing Lead · hired at Lumen</small></div>
+          </div>
+        </article>
+
+        <article class="quote" data-reveal style="--d:160ms">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <p>"As a career switcher I had no idea how to frame my experience. The keyword
+             matching showed me exactly what to say. Best $20 I've spent this year."</p>
+          <div class="quote-author">
+            <span class="quote-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">LT</span>
+            <div><b>Liam Turner</b><small>Product Manager · hired at Orbital</small></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>FAQ</span>
+        <h2 data-reveal style="--d:60ms">Questions, answered</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item" data-reveal>
+          <button class="faq-q" aria-expanded="false">
+            What counts as one "CV optimization"?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a"><div><p>
+            One optimization = one CV scored and rewritten against one job description.
+            You can re-edit and re-export that CV as many times as you like without
+            using another credit.
+          </p></div></div>
+        </div>
+
+        <div class="faq-item" data-reveal style="--d:50ms">
+          <button class="faq-q" aria-expanded="false">
+            Will my CV still be readable by ATS software?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a"><div><p>
+            Yes — that is the whole point. Every export is a single-column, text-based
+            layout with standard section headings, no tables, no text boxes and no
+            embedded images. We test each output against common parsers before release.
+          </p></div></div>
+        </div>
+
+        <div class="faq-item" data-reveal style="--d:100ms">
+          <button class="faq-q" aria-expanded="false">
+            Are the AI training and editing courses included in my monthly CV plan?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a"><div><p>
+            No — the AI Training Guide ($100) and Editing Masterclass ($50) are
+            standalone, one-time purchases. Your CV subscription covers only the
+            CV optimization plans shown in the Pricing section.
+          </p></div></div>
+        </div>
+
+        <div class="faq-item" data-reveal style="--d:150ms">
+          <button class="faq-q" aria-expanded="false">
+            What if I'm not happy with the result?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a"><div><p>
+            Every new subscriber gets a 7-day money-back guarantee. Email us within
+            seven days of your first payment and we'll refund it in full — no forms,
+            no interrogation.
+          </p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section section-tint" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-copy" data-reveal>
+          <span class="eyebrow">Contact</span>
+          <h2>Talk to a human, not a bot</h2>
+          <p>
+            Questions about plans, invoices or a stubborn CV that won't score above 70?
+            Send us a message — we reply within one business day.
+          </p>
+
+          <ul class="contact-list">
+            <li class="contact-item">
+              <span class="ci" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M3.8 7l8.2 6 8.2-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div><b>Email</b><a href="mailto:daims448@gmail.com">daims448@gmail.com</a></div>
+            </li>
+
+            <li class="contact-item">
+              <span class="ci" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M6.5 3.5h3l1.6 4-2.1 1.4a12 12 0 0 0 6.1 6.1l1.4-2.1 4 1.6v3a2 2 0 0 1-2.2 2A17.5 17.5 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2Z"
+                        stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div><b>Phone</b><a href="tel:+254794506240">+254794506240</a></div>
+            </li>
+
+            <li class="contact-item">
+              <span class="ci" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"
+                        stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  <circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.7"/>
+                </svg>
+              </span>
+              <div><b>Office</b><span>214 Moi Avenue, Mombasa, 80100</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Simple Contact Form (Placeholder) -->
+        <div class="form-card" data-reveal style="--d:90ms">
+          <h3>Send us a message</h3>
+          <p style="margin-bottom:20px; color:var(--muted); font-size:0.9rem;">We'll get back to you within one business day.</p>
+          <form id="contactForm">
+  <div class="field">
+    <label>Full name</label>
+    <input type="text" id="contactName" placeholder="Alex Morgan" required>
+  </div>
+  <div class="field">
+    <label>Email address</label>
+    <input type="email" id="contactEmail" placeholder="alex@company.com" required>
+  </div>
+  <div class="field">
+    <label>Message</label>
+    <textarea id="contactMessage" placeholder="Tell us a little about what you need…" required></textarea>
+  </div>
+  <button type="submit" id="submitContactBtn" class="btn btn-grad btn-block">Send message</button>
+         </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container">
+      <div class="cta-inner" data-reveal>
+        <h2>Your next interview starts<br>with a better CV</h2>
+        <p>Join 2,400+ job seekers who stopped guessing and started getting callbacks.</p>
+        <a href="#pricing" class="btn btn-light">
+          Start from $15/month
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="logo" aria-label="OptiCV home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M6 3.5h8L19 8v12.5H6V3.5Z" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M9 12.6l2.1 2.1L15 10.8" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="logo-text">Moha<strong>Digitals</strong></span>
+        </a>
+        <p>
+          AI-powered CV optimization that gets you past the applicant tracking system
+          and in front of the person who actually hires.
+        </p>
+        <div class="socials">
+          <a href="#" aria-label="OptiCV on X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.9 2H22l-6.8 7.8L23 22h-6.6l-5.2-6.8L5.3 22H2.2l7.3-8.3L1.6 2h6.8l4.7 6.2L18.9 2Zm-1.1 18h1.7L7.3 3.8H5.5L17.8 20Z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="OptiCV on LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9V9Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#optimize">Optimize CV</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Get in touch</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M3.8 7l8.2 6 8.2-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <a href="mailto:daims448@gmail.com">daims448@gmail.com</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6.5 3.5h3l1.6 4-2.1 1.4a12 12 0 0 0 6.1 6.1l1.4-2.1 4 1.6v3a2 2 0 0 1-2.2 2A17.5 17.5 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+            <a href="tel:+254794506240">+254794506240</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+            <span>214 Moi Avenue, Mombasa, 80100</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="year">2025</span> Moha Digitals Inc. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Refund Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- THANK YOU MODAL -->
+<div id="thankYouModal">
+  <div class="modal-content">
+    <div style="width:60px; height:60px; background:rgba(16,185,129,0.15); color:#059669; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:30px;">✓</div>
+    <h3 style="font-size:1.5rem; font-weight:800; margin-bottom:10px;">Payment Successful!</h3>
+    <p style="color:var(--muted); margin-bottom:24px; line-height:1.6;">
+      Thank you for your purchase. To get started, please contact us on WhatsApp or call us directly for further action.
+    </p>
+    <a href="https://wa.me/254794506240?text=Hi,%20I%20just%20paid%20on%20OptiCV." target="_blank" class="btn btn-block" style="background:#25D366; color:#fff; margin-bottom:12px; box-shadow:none;">
+      Contact +254 794 506 240
+    </a>
+    <button onclick="document.getElementById('thankYouModal').style.display='none'" style="background:none; border:none; color:var(--muted); font-weight:600; cursor:pointer; text-decoration:underline;">Close</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. HEADER & MOBILE MENU
+   ============================================================ */
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 12);
+});
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+  hamburger.setAttribute('aria-expanded', String(!isOpen));
+  mobileMenu.classList.toggle('open', !isOpen);
+});
+
+/* ============================================================
+   2. SCROLL REVEAL ANIMATIONS (CRUCIAL)
+   ============================================================ */
+const revealEls = document.querySelectorAll('[data-reveal]');
+setTimeout(() => {
+  revealEls.forEach(el => el.classList.add('in'));
+}, 2500);
+
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+} else {
+  revealEls.forEach(el => el.classList.add('in'));
+}
+
+/* ============================================================
+   3. CV OPTIMIZATION FETCH REQUEST
+   ============================================================ */
+document.getElementById('optimizeBtn').addEventListener('click', async () => {
+  const cvText = document.getElementById('cvInput').value;
+  const jobDescription = document.getElementById('jobInput').value;
+  const btn = document.getElementById('optimizeBtn');
+  const loading = document.getElementById('loadingText');
+  const resultBox = document.getElementById('resultBox');
+  const resultOutput = document.getElementById('resultOutput');
+
+  if (!cvText || !jobDescription) {
+    alert("Please fill in both the Job Description and your CV.");
+    return;
+  }
+
+  btn.style.display = 'none';
+  loading.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  try {
+    const response = await fetch('/api/optimize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cvText, jobDescription })
+    });
+
+    const data = await response.json();
+
+    if (data.error) throw new Error(data.error);
+
+    resultOutput.textContent = data.optimizedCV;
+    resultBox.style.display = 'block';
+
+  } catch (err) {
+    alert("Error: " + err.message);
+  } finally {
+    btn.style.display = 'inline-flex';
+    loading.style.display = 'none';
+  }
+});
+
+/* ============================================================
+   4. PRICING TOGGLE (Monthly vs Annual)
+   ============================================================ */
+const seg = document.getElementById('billingToggle');
+const segBtns = seg.querySelectorAll('.seg-btn');
+function setPeriod(period) {
+  seg.classList.toggle('annual', period === 'annual');
+  segBtns.forEach(btn => {
+    const active = btn.dataset.period === period;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+  document.querySelectorAll('.amount').forEach(el => {
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.textContent = el.dataset[period];
+      el.style.opacity = '1';
+    }, 120);
+  });
+  document.querySelectorAll('.billed').forEach(el => {
+    el.textContent = el.dataset[period];
+  });
+}
+document.querySelectorAll('.amount').forEach(el => {
+  el.style.transition = 'opacity .18s ease';
+});
+segBtns.forEach(btn => btn.addEventListener('click', () => setPeriod(btn.dataset.period)));
+
+/* ============================================================
+   5. CRYPTO PAYMENTS
+   ============================================================ */
+// Function for Courses ($50 and $100)
+async function payWithCrypto(event, amount, description) {
+  const btn = event.currentTarget;
+  const originalText = btn.innerText;
+  btn.innerText = 'Connecting to NOWPayments...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('/api/create-crypto-invoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, description })
+    });
+    const data = await response.json();
+    
+    if (data.url) {
+      window.location.href = data.url; 
+    } else {
+      alert('Error creating crypto invoice.');
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
+  } catch (error) {
+    alert('Network error. Please try again.');
+    btn.innerText = originalText;
+    btn.disabled = false;
+  }
+}
+
+// Function for Monthly Plans (Checks if Monthly or Annual is selected)
+function payForPlan(event, planName, monthlyPrice, annualPrice) {
+  const isAnnual = document.getElementById('billingToggle').classList.contains('annual');
+  
+  const amount = isAnnual ? annualPrice : monthlyPrice;
+  const description = isAnnual ? `${planName} (Annual)` : `${planName} (Monthly)`;
+
+  payWithCrypto(event, amount, description);
+}
+
+/* ============================================================
+   6. STATS COUNTERS
+   ============================================================ */
+function animateCounter(el) {
+  const target = Number(el.dataset.target) || 0;
+  const suffix = el.dataset.suffix || '';
+  const duration = 1500;
+  let startTime = null;
+  function tick(ts) {
+    if (!startTime) startTime = ts;
+    const p = Math.min((ts - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased).toLocaleString('en-US') + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+if ('IntersectionObserver' in window) {
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        countObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.counter').forEach(c => countObserver.observe(c));
+}
+
+/* ============================================================
+   7. FAQ ACCORDION
+   ============================================================ */
+document.querySelectorAll('.faq-item').forEach(item => {
+  const btn = item.querySelector('.faq-q');
+  btn.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(other => {
+      other.classList.remove('open');
+      other.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+/* ============================================================
+   8. SHOW THANK YOU MODAL & MISC
+   ============================================================ */
+if (window.location.search.includes('payment=success')) {
+  document.getElementById('thankYouModal').style.display = 'flex';
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+/* ============================================================
+   9. CONTACT FORM SUBMISSION
+   ============================================================ */
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const btn = document.getElementById('submitContactBtn');
+    const originalText = btn.innerText;
+    btn.innerText = 'Sending...';
+    btn.disabled = true;
+
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const message = document.getElementById('contactMessage').value;
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Message sent successfully! We will get back to you shortly.');
+        contactForm.reset();
+      } else {
+        alert(data.error || 'Something went wrong.');
+      }
+    } catch (error) {
+      alert('Network error. Please try again.');
+    } finally {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
+  });
+}
+</script>
+
+</body>
+</html>
