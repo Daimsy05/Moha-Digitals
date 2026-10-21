@@ -916,33 +916,47 @@ section[id]{scroll-margin-top:100px}
   </section>
 
   <!-- CV OPTIMIZATION TOOL -->
-  <section class="section section-tint" id="optimize">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow" data-reveal>Try it now</span>
-        <h2 data-reveal style="--d:60ms">Optimize your CV instantly</h2>
-        <p data-reveal style="--d:120ms">Paste your current CV and the job description you are applying for. Our AI will rewrite it to pass the ATS.</p>
-      </div>
-      
-      <div class="form-card" data-reveal>
-        <div class="field">
-          <label>Paste the Job Description</label>
-          <textarea id="jobInput" rows="4" placeholder="Paste the requirements, skills, and duties here..."></textarea>
-        </div>
-        <div class="field">
-          <label>Paste your Current CV</label>
-          <textarea id="cvInput" rows="6" placeholder="Paste your current CV text here..."></textarea>
-        </div>
-        <button id="optimizeBtn" class="btn btn-grad btn-block" style="margin-top:10px;">Optimize My CV Now</button>
-        <div id="loadingText" style="display:none; text-align:center; margin-top:15px; font-weight:700; color:var(--brand);">Optimizing... Please wait up to 20 seconds.</div>
-        
-        <div id="resultBox" style="display:none; margin-top:24px; padding:24px; background:var(--surface); border-radius:16px; border:1px solid var(--line);">
-          <h4 style="margin-bottom:12px; font-weight:800; color:var(--ink);">Your Optimized CV:</h4>
-          <div id="resultOutput" style="white-space:pre-wrap; font-size:0.95rem; line-height:1.7; color:var(--ink-2);"></div>
-        </div>
-      </div>
+  <div class="form-card" data-reveal>
+  <!-- Toggle Buttons -->
+  <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <button id="tabPaste" class="btn btn-primary" style="flex: 1; padding: 10px; font-size: 0.9rem;">Paste Text</button>
+    <button id="tabUpload" class="btn btn-ghost" style="flex: 1; padding: 10px; font-size: 0.9rem;">Upload PDF/DOCX</button>
+  </div>
+
+  <div class="field">
+    <label>Paste the Job Description</label>
+    <textarea id="jobInput" rows="4" placeholder="Paste the requirements, skills, and duties here..."></textarea>
+  </div>
+
+  <!-- Paste CV Section -->
+  <div id="pasteSection">
+    <div class="field">
+      <label>Paste your Current CV</label>
+      <textarea id="cvInput" rows="6" placeholder="Paste your current CV text here..."></textarea>
     </div>
-  </section>
+  </div>
+
+  <!-- Upload CV Section (Hidden by default) -->
+  <div id="uploadSection" style="display: none;">
+    <div class="field">
+      <label>Upload your CV (PDF or DOCX)</label>
+      <input type="file" id="cvFile" accept=".pdf,.docx" style="padding: 10px; background: var(--surface); border: 1px dashed var(--brand); border-radius: 12px; width: 100%;">
+    </div>
+  </div>
+
+  <div class="field" style="margin-top: 20px;">
+    <label>Access Code (Required)</label>
+    <input type="text" id="accessCodeInput" placeholder="Enter your code (e.g. MOHA-8X2P)">
+  </div>
+
+  <button id="optimizeBtn" class="btn btn-grad btn-block" style="margin-top:10px;">Optimize My CV Now</button>
+  <div id="loadingText" style="display:none; text-align:center; margin-top:15px; font-weight:700; color:var(--brand);">Optimizing... Please wait up to 20 seconds.</div>
+  
+  <div id="resultBox" style="display:none; margin-top:24px; padding:24px; background:var(--surface); border-radius:16px; border:1px solid var(--line);">
+    <h4 style="margin-bottom:12px; font-weight:800; color:var(--ink);">Your Optimized CV:</h4>
+    <div id="resultOutput" style="white-space:pre-wrap; font-size:0.95rem; line-height:1.7; color:var(--ink-2);"></div>
+  </div>
+</div>
 
   <!-- FEATURES -->
   <section class="section" id="features">
@@ -1759,6 +1773,90 @@ s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
+   // Tab Switching Logic
+const tabPaste = document.getElementById('tabPaste');
+const tabUpload = document.getElementById('tabUpload');
+const pasteSection = document.getElementById('pasteSection');
+const uploadSection = document.getElementById('uploadSection');
+
+tabPaste.addEventListener('click', () => {
+  tabPaste.classList.replace('btn-ghost', 'btn-primary');
+  tabUpload.classList.replace('btn-primary', 'btn-ghost');
+  pasteSection.style.display = 'block';
+  uploadSection.style.display = 'none';
+});
+
+tabUpload.addEventListener('click', () => {
+  tabUpload.classList.replace('btn-ghost', 'btn-primary');
+  tabPaste.classList.replace('btn-primary', 'btn-ghost');
+  pasteSection.style.display = 'none';
+  uploadSection.style.display = 'block';
+});
+document.getElementById('optimizeBtn').addEventListener('click', async () => {
+  const jobDescription = document.getElementById('jobInput').value;
+  const accessCode = document.getElementById('accessCodeInput').value;
+  const cvText = document.getElementById('cvInput').value;
+  const cvFile = document.getElementById('cvFile').files[0];
+  
+  const btn = document.getElementById('optimizeBtn');
+  const loading = document.getElementById('loadingText');
+  const resultBox = document.getElementById('resultBox');
+  const resultOutput = document.getElementById('resultOutput');
+
+  const isUploading = uploadSection.style.display === 'block';
+
+  if (!jobDescription || !accessCode) {
+    alert("Please fill in the Job Description and your Access Code.");
+    return;
+  }
+
+  if (isUploading && !cvFile) {
+    alert("Please select a file to upload.");
+    return;
+  }
+
+  if (!isUploading && !cvText) {
+    alert("Please paste your CV text.");
+    return;
+  }
+
+  btn.style.display = 'none';
+  loading.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  // Prepare the payload
+  const formData = new FormData();
+  formData.append('jobDescription', jobDescription);
+  formData.append('accessCode', accessCode);
+  
+  if (isUploading) {
+    formData.append('cvFile', cvFile);
+  } else {
+    formData.append('cvText', cvText);
+  }
+
+  try {
+    const response = await fetch('/api/optimize', {
+      method: 'POST',
+      body: formData // No headers needed, the browser sets them automatically for FormData
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error);
+
+    resultOutput.textContent = data.optimizedCV;
+    resultBox.style.display = 'block';
+    
+    alert(`Success! You have ${data.remainingCredits} optimizations left.`);
+
+  } catch (err) {
+    alert("Error: " + err.message);
+  } finally {
+    btn.style.display = 'inline-flex';
+    loading.style.display = 'none';
+  }
+});
 </script>
 
 </body>
