@@ -1517,29 +1517,32 @@ section[id]{scroll-margin-top:100px}
 </div>
 
 <script>
-/* ============================================================
-   1. HEADER & MOBILE MENU
-   ============================================================ */
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6ad8a256a03d3a34b7a7c556/1i6b4e0o9'; // Make sure this is your actual ID
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+/* 1. HEADER & MOBILE MENU */
 const header = document.getElementById('header');
-window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 12);
-});
+window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 12));
 
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
-hamburger.addEventListener('click', () => {
-  const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
-  hamburger.setAttribute('aria-expanded', String(!isOpen));
-  mobileMenu.classList.toggle('open', !isOpen);
-});
+if (hamburger) {
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', String(!isOpen));
+    mobileMenu.classList.toggle('open', !isOpen);
+  });
+}
 
-/* ============================================================
-   2. SCROLL REVEAL ANIMATIONS (CRUCIAL)
-   ============================================================ */
+/* 2. SCROLL REVEAL ANIMATIONS */
 const revealEls = document.querySelectorAll('[data-reveal]');
-setTimeout(() => {
-  revealEls.forEach(el => el.classList.add('in'));
-}, 2500);
+setTimeout(() => revealEls.forEach(el => el.classList.add('in')), 2500);
 
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries) => {
@@ -1555,54 +1558,11 @@ if ('IntersectionObserver' in window) {
   revealEls.forEach(el => el.classList.add('in'));
 }
 
-/* ============================================================
-   3. CV OPTIMIZATION FETCH REQUEST
-   ============================================================ */
-document.getElementById('optimizeBtn').addEventListener('click', async () => {
-  const cvText = document.getElementById('cvInput').value;
-  const jobDescription = document.getElementById('jobInput').value;
-  const btn = document.getElementById('optimizeBtn');
-  const loading = document.getElementById('loadingText');
-  const resultBox = document.getElementById('resultBox');
-  const resultOutput = document.getElementById('resultOutput');
-
-  if (!cvText || !jobDescription) {
-    alert("Please fill in both the Job Description and your CV.");
-    return;
-  }
-
-  btn.style.display = 'none';
-  loading.style.display = 'block';
-  resultBox.style.display = 'none';
-
-  try {
-    const response = await fetch('/api/optimize', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cvText, jobDescription })
-    });
-
-    const data = await response.json();
-
-    if (data.error) throw new Error(data.error);
-
-    resultOutput.textContent = data.optimizedCV;
-    resultBox.style.display = 'block';
-
-  } catch (err) {
-    alert("Error: " + err.message);
-  } finally {
-    btn.style.display = 'inline-flex';
-    loading.style.display = 'none';
-  }
-});
-
-/* ============================================================
-   4. PRICING TOGGLE (Monthly vs Annual)
-   ============================================================ */
+/* 3. PRICING TOGGLE (Monthly vs Annual) */
 const seg = document.getElementById('billingToggle');
-const segBtns = seg.querySelectorAll('.seg-btn');
+const segBtns = seg ? seg.querySelectorAll('.seg-btn') : [];
 function setPeriod(period) {
+  if(!seg) return;
   seg.classList.toggle('annual', period === 'annual');
   segBtns.forEach(btn => {
     const active = btn.dataset.period === period;
@@ -1620,58 +1580,148 @@ function setPeriod(period) {
     el.textContent = el.dataset[period];
   });
 }
-document.querySelectorAll('.amount').forEach(el => {
-  el.style.transition = 'opacity .18s ease';
-});
+document.querySelectorAll('.amount').forEach(el => el.style.transition = 'opacity .18s ease');
 segBtns.forEach(btn => btn.addEventListener('click', () => setPeriod(btn.dataset.period)));
 
-/* ============================================================
-   5. CRYPTO PAYMENTS
-   ============================================================ */
-// Function for Courses ($50 and $100)
-/* Function for Courses ($50 and $100) */
+/* 4. PAYMENT REDIRECT & ACCESS CODE GENERATION */
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('payment') === 'success') {
+  const planName = urlParams.get('plan') || 'Starter Plan'; 
+  
+  document.getElementById('thankYouModal').style.display = 'flex';
+  document.getElementById('displayCode').innerText = 'Generating...';
+
+  fetch('/api/claim-plan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ planName: planName })
+  })
+  .then(res => res.json())
+  .then(data => document.getElementById('displayCode').innerText = data.accessCode)
+  .catch(() => document.getElementById('displayCode').innerText = 'Error. Contact support.');
+}
+
+/* 5. CV OPTIMIZER (File Upload + Credit Check) */
+const tabPaste = document.getElementById('tabPaste');
+const tabUpload = document.getElementById('tabUpload');
+const pasteSection = document.getElementById('pasteSection');
+const uploadSection = document.getElementById('uploadSection');
+
+if (tabPaste && tabUpload) {
+  tabPaste.addEventListener('click', () => {
+    tabPaste.classList.replace('btn-ghost', 'btn-primary');
+    tabUpload.classList.replace('btn-primary', 'btn-ghost');
+    pasteSection.style.display = 'block';
+    uploadSection.style.display = 'none';
+  });
+
+  tabUpload.addEventListener('click', () => {
+    tabUpload.classList.replace('btn-ghost', 'btn-primary');
+    tabPaste.classList.replace('btn-primary', 'btn-ghost');
+    pasteSection.style.display = 'none';
+    uploadSection.style.display = 'block';
+  });
+}
+
+const optimizeBtn = document.getElementById('optimizeBtn');
+if (optimizeBtn) {
+  optimizeBtn.addEventListener('click', async () => {
+    const jobDescription = document.getElementById('jobInput').value;
+    const accessCode = document.getElementById('accessCodeInput').value;
+    const cvText = document.getElementById('cvInput').value;
+    const cvFile = document.getElementById('cvFile').files[0];
+    
+    const btn = document.getElementById('optimizeBtn');
+    const loading = document.getElementById('loadingText');
+    const resultBox = document.getElementById('resultBox');
+    const resultOutput = document.getElementById('resultOutput');
+
+    const isUploading = uploadSection.style.display === 'block';
+
+    if (!jobDescription || !accessCode) {
+      alert("Please fill in the Job Description and your Access Code.");
+      return;
+    }
+    if (isUploading && !cvFile) {
+      alert("Please select a file to upload.");
+      return;
+    }
+    if (!isUploading && !cvText) {
+      alert("Please paste your CV text.");
+      return;
+    }
+
+    btn.style.display = 'none';
+    loading.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('jobDescription', jobDescription);
+    formData.append('accessCode', accessCode);
+    if (isUploading) formData.append('cvFile', cvFile);
+    else formData.append('cvText', cvText);
+
+    try {
+      const response = await fetch('/api/optimize', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+
+      resultOutput.textContent = data.optimizedCV;
+      resultBox.style.display = 'block';
+      alert(`Success! You have ${data.remainingCredits} optimizations left.`);
+
+    } catch (err) {
+      alert("Error: " + err.message);
+    } finally {
+      btn.style.display = 'inline-flex';
+      loading.style.display = 'none';
+    }
+  });
+}
+
+/* 6. CRYPTO PAYMENTS */
 async function payWithCrypto(btn, amount, description) {
   const originalText = btn.innerText;
   btn.innerText = 'Connecting to NOWPayments...';
   btn.disabled = true;
+  
+  const couponInput = document.getElementById('couponInput');
+  const couponCode = couponInput ? couponInput.value.trim() : '';
 
   try {
     const response = await fetch('/api/create-crypto-invoice', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount, description })
+      body: JSON.stringify({ amount, description, couponCode })
     });
     const data = await response.json();
     
     if (data.invoice_url) {
       window.location.href = data.invoice_url; 
     } else {
-      alert('Error creating crypto invoice.');
+      alert('Error creating invoice.');
       btn.innerText = originalText;
       btn.disabled = false;
     }
   } catch (error) {
-    console.error(error);
     alert('Network error. Please try again.');
     btn.innerText = originalText;
     btn.disabled = false;
   }
 }
 
-/* Function for Monthly Plans (Checks if Monthly or Annual is selected) */
 function payForPlan(btn, planName, monthlyPrice, annualPrice) {
   const isAnnual = document.getElementById('billingToggle').classList.contains('annual');
-  
   const amount = isAnnual ? annualPrice : monthlyPrice;
   const description = isAnnual ? `${planName} (Annual)` : `${planName} (Monthly)`;
-
-  // Pass the button (btn) directly into the crypto function
   payWithCrypto(btn, amount, description);
 }
 
-/* ============================================================
-   6. STATS COUNTERS
-   ============================================================ */
+/* 7. STATS COUNTERS */
 function animateCounter(el) {
   const target = Number(el.dataset.target) || 0;
   const suffix = el.dataset.suffix || '';
@@ -1698,9 +1748,7 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('.counter').forEach(c => countObserver.observe(c));
 }
 
-/* ============================================================
-   7. FAQ ACCORDION
-   ============================================================ */
+/* 8. FAQ ACCORDION */
 document.querySelectorAll('.faq-item').forEach(item => {
   const btn = item.querySelector('.faq-q');
   btn.addEventListener('click', () => {
@@ -1716,22 +1764,11 @@ document.querySelectorAll('.faq-item').forEach(item => {
   });
 });
 
-/* ============================================================
-   8. SHOW THANK YOU MODAL & MISC
-   ============================================================ */
-if (window.location.search.includes('payment=success')) {
-  document.getElementById('thankYouModal').style.display = 'flex';
-}
-
-document.getElementById('year').textContent = new Date().getFullYear();
-/* ============================================================
-   9. CONTACT FORM SUBMISSION
-   ============================================================ */
+/* 9. CONTACT FORM SUBMISSION */
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const btn = document.getElementById('submitContactBtn');
     const originalText = btn.innerText;
     btn.innerText = 'Sending...';
@@ -1747,9 +1784,7 @@ if (contactForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, message })
       });
-
       const data = await response.json();
-
       if (data.success) {
         alert('Message sent successfully! We will get back to you shortly.');
         contactForm.reset();
@@ -1757,107 +1792,16 @@ if (contactForm) {
         alert(data.error || 'Something went wrong.');
       }
     } catch (error) {
-      alert('Network error. Please try again.');
+      alert('Failed to send message. Please try again.');
     } finally {
       btn.innerText = originalText;
       btn.disabled = false;
     }
   });
 }
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6ad8a256a03d3a34b7a7c556/1k5f3kmpq';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-   // Tab Switching Logic
-const tabPaste = document.getElementById('tabPaste');
-const tabUpload = document.getElementById('tabUpload');
-const pasteSection = document.getElementById('pasteSection');
-const uploadSection = document.getElementById('uploadSection');
 
-tabPaste.addEventListener('click', () => {
-  tabPaste.classList.replace('btn-ghost', 'btn-primary');
-  tabUpload.classList.replace('btn-primary', 'btn-ghost');
-  pasteSection.style.display = 'block';
-  uploadSection.style.display = 'none';
-});
-
-tabUpload.addEventListener('click', () => {
-  tabUpload.classList.replace('btn-ghost', 'btn-primary');
-  tabPaste.classList.replace('btn-primary', 'btn-ghost');
-  pasteSection.style.display = 'none';
-  uploadSection.style.display = 'block';
-});
-document.getElementById('optimizeBtn').addEventListener('click', async () => {
-  const jobDescription = document.getElementById('jobInput').value;
-  const accessCode = document.getElementById('accessCodeInput').value;
-  const cvText = document.getElementById('cvInput').value;
-  const cvFile = document.getElementById('cvFile').files[0];
-  
-  const btn = document.getElementById('optimizeBtn');
-  const loading = document.getElementById('loadingText');
-  const resultBox = document.getElementById('resultBox');
-  const resultOutput = document.getElementById('resultOutput');
-
-  const isUploading = uploadSection.style.display === 'block';
-
-  if (!jobDescription || !accessCode) {
-    alert("Please fill in the Job Description and your Access Code.");
-    return;
-  }
-
-  if (isUploading && !cvFile) {
-    alert("Please select a file to upload.");
-    return;
-  }
-
-  if (!isUploading && !cvText) {
-    alert("Please paste your CV text.");
-    return;
-  }
-
-  btn.style.display = 'none';
-  loading.style.display = 'block';
-  resultBox.style.display = 'none';
-
-  // Prepare the payload
-  const formData = new FormData();
-  formData.append('jobDescription', jobDescription);
-  formData.append('accessCode', accessCode);
-  
-  if (isUploading) {
-    formData.append('cvFile', cvFile);
-  } else {
-    formData.append('cvText', cvText);
-  }
-
-  try {
-    const response = await fetch('/api/optimize', {
-      method: 'POST',
-      body: formData // No headers needed, the browser sets them automatically for FormData
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.error);
-
-    resultOutput.textContent = data.optimizedCV;
-    resultBox.style.display = 'block';
-    
-    alert(`Success! You have ${data.remainingCredits} optimizations left.`);
-
-  } catch (err) {
-    alert("Error: " + err.message);
-  } finally {
-    btn.style.display = 'inline-flex';
-    loading.style.display = 'none';
-  }
-});
+/* 10. FOOTER YEAR */
+document.getElementById('year').textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
