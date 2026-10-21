@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai');
 const path = require('path');
-const nodemailer = require('nodemailer'); // ADDED: Nodemailer
+const { Resend } = require('resend');
 
 const app = express();
 app.use(cors());
@@ -15,14 +15,9 @@ app.use(express.static(__dirname));
 // Initialize OpenAI
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Initialize Nodemailer (Gmail)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS // This must be a Google App Password
-  }
-});
+
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ============================================================
 // 1. API Endpoint for CV Optimization
@@ -99,7 +94,7 @@ app.post('/api/create-crypto-invoice', async (req, res) => {
 });
 
 // ============================================================
-// 3. API Endpoint for Contact Form (Nodemailer)
+// 3. API Endpoint for Contact Form (Resend)
 // ============================================================
 app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;
@@ -109,19 +104,24 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER, // Sends the email to your inbox
-      replyTo: email,             // Clicking "Reply" in Gmail goes to the customer
+    const data = await resend.emails.send({
+      // Resend requires you to use this "from" address for testing
+      from: 'onboarding@resend.dev',
+      to: 'daims448@gmail.com', // Your email address
+      reply_to: email,          // If you click "reply" in Gmail, it goes to the customer
       subject: `New OptiCV Message from ${name}`,
-      text: `You have received a new message from your website contact form.\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-    };
+      html: `<p>You have a new message from your website contact form.</p>
+             <p><strong>Name:</strong> ${name}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             <p><strong>Message:</strong></p>
+             <p>${message}</p>`
+    });
 
-    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully:", data);
     res.json({ success: true, message: 'Email sent successfully!' });
   } catch (error) {
     console.error('Email Error:', error);
-    res.status(500).json({ error: 'Failed to send email. Check server logs.' });
+    res.status(500).json({ error: 'Failed to send email.' });
   }
 });
 
